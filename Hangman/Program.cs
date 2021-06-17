@@ -13,12 +13,12 @@ namespace Hangman
         static void Main(string[] args)
         {
             TheGame myGame = new TheGame();
-            //Graphics object used in theg game
-            Graphics MyGraphics = new Graphics();
+
             //IntroScreen
-            MyGraphics.IntroScreen();
+            myGame.GameIntro();
+
             //Actual application
-            myGame.Game(MyGraphics);
+            myGame.Game();
         }
 
         public class TheGame
@@ -27,9 +27,10 @@ namespace Hangman
 
             public TheGame()
             {
+                
 
             }
-            public void Game(Graphics MyGraphics)
+            public void Game()
             {
 
                 do
@@ -38,24 +39,37 @@ namespace Hangman
                     int playerGuesses = 10;
                     string strInput = string.Empty;
                     int intInput = 0;
-                    Random rng = new Random();
+                  
+                    
 
                     Console.Clear();
 
-                    Console.Write($"Welcome to Hangman. We have three difficulty types.\n" +
-                             $"1. Easy\n" +
-                             $"2. Medium\n" +
-                             $"3. Hard\n" +
-                             $"Select difficulty by inputting corresponding number: ");
+                    string welcomeText = "Welcome to Hangman. We have three difficulty types." +
+                                         "\n----------------------------------------------------"
+                                        +"\n\t1. Easy" +
+                                        "\n\t2. Medium" +
+                                        "\n\t3. Hard" +
+                                        "\n----------------------------------------------------"+
+                                        "\nSelect difficulty by inputting corresponding number: ";
+
+                    Console.Write(welcomeText);
 
                     //Player chooses difficulty
-                    intInput = StringToInt(1, 3);
+                    do
+                    {
+                        intInput = NumberRange(StringToInt(Console.ReadLine()), 1, 3);
+                    } while (intInput == 0);
+
+
+                    
+                    
+
 
                     //String array where all secret words are stored, changes depending on what the player chooses 
                     string[] arrSecretWords = DifficultyLevel(intInput);
 
                     //Secret word is choosen from an array
-                    string secretWord = arrSecretWords[rng.Next(0, arrSecretWords.Length)];
+                    string secretWord = arrSecretWords[RandomGenerator(0, arrSecretWords.Length)];
                     char[] charCorrectLetters = new char[0];
 
                     //StringBuilder that stores all the wrong chars
@@ -68,7 +82,7 @@ namespace Hangman
                     {
                         Console.Clear();
                         //Displays hangman drawing in its current state
-                        MyGraphics.HangmanDrawing(playerGuesses);
+                        HangmanGraphic(playerGuesses);
 
                         // Displays the hidden word
                         Console.WriteLine($"\n\tCurrent word: {shownWord}");
@@ -87,7 +101,7 @@ namespace Hangman
                                          + "What is you guess: ");
 
                         //Player input
-                        strInput = CheckString().ToUpper();
+                        strInput = Console.ReadLine().ToUpper();
 
                         //Creates char used if the player inputs a single character
                         char inputChar = 'l';
@@ -128,9 +142,9 @@ namespace Hangman
 
                     //####### PLAYER OUTCOME #######
                     Console.Clear();
+                    HangmanGraphic(playerGuesses);
                     if (shownWord == secretWord)//Won
                     {
-                        MyGraphics.HangmanDrawing(playerGuesses);
                         Console.WriteLine($"\tCurrent word: {shownWord}");
                         Console.WriteLine("Great work. You figured out the correct word and " +
                                           "\nsaved the hanging man.");
@@ -138,18 +152,18 @@ namespace Hangman
                     }
                     else
                     { //Lost
-                        MyGraphics.HangmanDrawing(playerGuesses);
                         Console.WriteLine($"\t----GAME-OVER-----" +
                                         $"\n\nYou are out of guess. The correct word was {secretWord}.\n");
-                        Console.Write("Want to go again (Y/N: ");
+                        Console.Write("Want to go again (Y/N): ");
                     }
 
                     //The final section of the program, where the player chooses to play again or exit program.
-                    isalive = ProgramEnding(CheckString());
+                    isalive = ProgramEnding(Console.ReadLine().ToLower());
 
 
                 } while (isalive);
             }
+            //Replaces each letter of the secret word with lower dashes(_)
             public string HideWord(string secretWord)
             {
                 char[] shownWord = new char[secretWord.Length];
@@ -162,6 +176,7 @@ namespace Hangman
                 return result;
             }
 
+            //Checks if players input is found inside the word, and if true, replaces _ with the letter the player inputted.  
             public string InsertPlayerLetter(string secretWord, string shownWord, char guesschar)
             {
                 char[] charCheck = shownWord.ToCharArray();
@@ -304,16 +319,17 @@ namespace Hangman
             //Method shown at the end of the hangman program
             public bool ProgramEnding(string answer)
             {
+                bool playerAnswer = false;
 
                 //Checks whether the player wants to play again or not
 
 
-                if (answer == "y" || answer == "yes")
+                if (Equals(answer, "y") || Equals(answer, "yes"))
                 {
                     //Game will begin again
-                    isalive = true;
+                    playerAnswer = true;
                 }
-                else if (answer == "n" || answer == "no")
+                else if (Equals(answer, "n") || Equals(answer, "no"))
                 {
                     Console.Write("program will exit. Press any key to continue: ");
                     Console.ReadKey();
@@ -323,22 +339,22 @@ namespace Hangman
                 {
                     Console.WriteLine("Invalid input. Program will exit.");
                     Console.ReadKey();
-                    isalive = false;
+                    playerAnswer = false;
                 }
-                return isalive;
+                return playerAnswer;
             }
             //These are the methods that I've turned into classes, in order to make Unit testing easier to manage
 
-            public int StringToInt()
+            //Checks to make sure that player input is a int 
+            public int StringToInt(string input)
             {
                 bool correctFormat = false;
-                int intInput = 0;
-                do
-                {
+                int result = 0;
+               
                     try
                     {
-                        intInput = int.Parse(Console.ReadLine());
-                        correctFormat = true;
+                        correctFormat = int.TryParse(input, out result);
+                        
                     }
                     catch (FormatException)
                     {
@@ -348,74 +364,43 @@ namespace Hangman
                     {
                         Console.Write("Too big number. Try again: ");
                     }
-                } while (!correctFormat);
-
-                return intInput;
+                
+                return result;
             }
 
-            public int StringToInt(int start, int end)
+            public int RandomGenerator(int start, int exclusive)
             {
-                bool correctFormat = false;
-                int intInput = 0;
+                Random rng = new Random();
+
+                int result = rng.Next(start, exclusive);
+
+                return result;
+
+            }
+
+
+            //Checks to make sure that player input is a int and that the int is within the parameters start and end
+            public int NumberRange(int value, int start, int end)
+            {
+               
                 do
                 {
-                    try
-                    {
-                        intInput = int.Parse(Console.ReadLine());
-                        correctFormat = true;
-                    }
-                    catch (FormatException)
-                    {
-                        Console.Write("Wrong format. Please try again: ");
-                    }
-                    catch (OverflowException)
-                    {
-                        Console.Write("Too big number. Try again: ");
-                    }
-                    if (intInput < start || intInput > end)
+                   
+                    if (value < start || value > end)
                     {
                         Console.Write("The option is not available. Try again: ");
+                        value = StringToInt(Console.ReadLine());
                     }
 
 
-                } while (correctFormat == false || intInput < start || intInput > end);
+                } while (value < start || value > end);
 
-                return intInput;
+                return value;
             }
 
-            public string CheckString()
-            {
-
-                bool correctFormat = false;
-                string strInput = string.Empty;
-
-                do
-                {
-                    try
-                    {
-                        strInput = Console.ReadLine();
-                        correctFormat = true;
-                    }
-                    catch (FormatException)
-                    {
-                        Console.Write("Invalid format. Try again: ");
-                    }
-                    catch (OverflowException)
-                    {
-                        Console.Write("Input too big. Try again: ");
-                    }
-                    catch (ArgumentNullException)
-                    {
-
-                        Console.Write("No input. Try again: ");
-                    }
-
-                } while (!correctFormat);
-
-                return strInput;
-            }
+            
             //The intro screen
-            public void HangmanGraphic()
+            public void GameIntro()
             {
 
                 Console.WriteLine(".......................................");
@@ -435,23 +420,9 @@ namespace Hangman
             }
 
             //The hangman drawing
-            public void HangmanGraphic(int guessesLeft)
+            public char[,] HangmanGraphic(int guessesLeft)
             {
-                /*
 
-
-            0 ...................................  
-            1 ..__________.......................      
-            2 ..|./.......|...THE.MAN.WAS.HANGED.
-            3 ..|/........()......YOU.LOSE.......
-            4 ..|......../||\....................
-            5 ..|........./\.....................
-            6 ..|......../..\....................
-            7 ..|................................      
-            8 WM|_____MWMWMWMWMWMWMWMWMWMWMWMWMWM 4-9 struct     
-            9 ...................................       
-
-            */
                 //The hangman drawing
                 char[,] charHangmanDisplay = new char[10, 34]{
                                                   {'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},//34  
@@ -541,6 +512,8 @@ namespace Hangman
                     Console.WriteLine();
                     Console.ForegroundColor = ConsoleColor.White;
                 }
+
+                return charHangmanDisplay;
             }
 
         }

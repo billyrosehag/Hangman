@@ -21,32 +21,68 @@ namespace Hangman.Test
 
         }
 
-
+        //ProgramEnding()
         [Fact]
-        public void ExitProgramWhenCalled()
+        public void RestartProgramWhenCalled()
         {
             TheGame sut = new TheGame();
 
-            sut.isalive = false;
+            //bool expected = false;
 
-            
+            bool actual = sut.ProgramEnding("y");
 
-            Assert.False(sut.ProgramEnding("n"));
+            Assert.True(actual);
+        }
+          
+        //StringToInt
+        [Fact]
+        public void ReturnNumberIfCorrectInput()
+        {
+            TheGame sut = new TheGame();
+
+            int expected = 5;
+            int actual = sut.StringToInt("5");
+
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void ReturnZeroIfWrongInput()
+        {
+            TheGame sut = new TheGame();
+
+            int expected = 0;
+            int actual = sut.StringToInt("Not a number");
+
+            Assert.Equal(expected, actual);
+        }
+    
+        [Fact]
+
+        public void RandomCheck()
+        {
+            TheGame sut = new TheGame();
+
+            int actual = sut.RandomGenerator(1, 11);
+
+            Assert.InRange(actual, 1, 10);
 
         }
 
+        //NumberRange();
         [Fact]
-        public void GiveIntBackWhenCalled()
+        public void ReturnNumberWhenInRange()
         {
             TheGame sut = new TheGame();
 
-            int expected = 3;
+            int expected = 2;
 
-            int actual = sut.StringToInt(1, 3);
+            int actual = sut.NumberRange(2, 1, 3);
+
 
             Assert.Equal(expected, actual);
 
         }
+  
 
         //InsertPlayerLetter();
         [Fact]
@@ -115,6 +151,18 @@ namespace Hangman.Test
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public void NoNullOrWhiteSpacesInLevel1To3()
+        {
+            //Checks to see if the arrays created during the DifficultyLevel phase have null or white spaces within them. Which they
+            //Shouldn't
+            TheGame sut = new TheGame();
+
+            Assert.All(sut.DifficultyLevel(1), word=>Assert.False(string.IsNullOrWhiteSpace(word)));
+            Assert.All(sut.DifficultyLevel(2), word => Assert.False(string.IsNullOrWhiteSpace(word)));
+            Assert.All(sut.DifficultyLevel(3), word => Assert.False(string.IsNullOrWhiteSpace(word)));
+        }
+
         //CorrectLetters();
 
         [Fact]
@@ -163,6 +211,52 @@ namespace Hangman.Test
 
 
         }
+
+        [Fact]
+        public void LengthLayer1HangmanDrawing()
+        {
+            TheGame sut = new TheGame();
+
+            int expected = 34;
+
+            int actual = sut.HangmanGraphic(10).GetLength(1);
+
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void LengthLayer0HangmanDrawing()
+        {
+            TheGame sut = new TheGame();
+
+            int expected = 10;
+
+            int actual = sut.HangmanGraphic(10).GetLength(0);
+
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void GetChangesToDrawingAt1GuessesLeft()
+        {
+            TheGame sut = new TheGame();
+
+            char[,] arrSut = sut.HangmanGraphic(1);
+
+            char expected = '/';
+
+            char actual = arrSut[5, 12]; 
+
+            Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void BeAlive()
+        {
+            TheGame sut = new TheGame();
+
+
+            Assert.True(sut.isalive);
+        }
+
+
 
 
 
