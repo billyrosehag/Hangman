@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using Hangman;
 using static Hangman.myProgram;
+using System.Text;
 
 namespace Hangman.Test
 {
@@ -55,7 +56,36 @@ namespace Hangman.Test
 
             Assert.Equal(expected, actual);
         }
-    
+
+        //MyBuilder()
+        [Fact]
+        public void AddToWrongCharacters()
+        {
+            TheGame sut = new TheGame();
+
+            StringBuilder actual = new StringBuilder("string");
+
+            string expected = "stringy";
+
+            actual = sut.MyBuilder(actual, 'y',false);
+
+            Assert.Equal(expected, actual.ToString());
+
+        }
+        [Fact]
+        public void ShowNotAdd()
+        {
+            TheGame sut = new TheGame();
+
+            StringBuilder actual = new StringBuilder("string");
+
+            string expected = "string";
+
+            actual = sut.MyBuilder(actual, 'y', true);
+
+            Assert.Equal(expected, actual.ToString());
+        }
+
         [Fact]
 
         public void RandomCheck()

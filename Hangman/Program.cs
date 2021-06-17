@@ -39,8 +39,6 @@ namespace Hangman
                     int playerGuesses = 10;
                     string strInput = string.Empty;
                     int intInput = 0;
-                  
-                    
 
                     Console.Clear();
 
@@ -60,9 +58,6 @@ namespace Hangman
                         intInput = NumberRange(StringToInt(Console.ReadLine()), 1, 3);
                     } while (intInput == 0);
 
-
-                    
-                    
 
 
                     //String array where all secret words are stored, changes depending on what the player chooses 
@@ -89,10 +84,8 @@ namespace Hangman
 
                         // Displays the wrong letters that has been inputted by the player
                         Console.WriteLine("Current wrong discovered letter are: ");
-                        foreach (char letter in wrongCharacters.ToString())
-                        {
-                            Console.Write($" {letter} ");
-                        }
+                        MyBuilder(wrongCharacters, '1', true);
+
                         Console.WriteLine();
 
                         //Presents player with their options and amounts of guesses left
@@ -132,9 +125,9 @@ namespace Hangman
                         {
                             //Imports player input if it is one letter and is not already inside wrongCharacters string Builder
                             Console.WriteLine("Character not part of the secret word.");
-                            if (!wrongCharacters.ToString().Contains(inputChar) && strInput.Length == 1)
+                            if (strInput.Length == 1)
                             {
-                                wrongCharacters.Append(inputChar);
+                                wrongCharacters = MyBuilder(wrongCharacters,inputChar,false);
                                 playerGuesses--;
                             }
                         }
@@ -378,6 +371,26 @@ namespace Hangman
 
             }
 
+            public StringBuilder MyBuilder(StringBuilder input, char character, bool show) {
+
+              
+                    if (!show &&!input.ToString().Contains(character))
+                    {
+                        input.Append(character);
+                    }
+                else
+                {
+                    foreach(char c in input.ToString())
+                    {
+                        Console.Write($" {c} "); 
+                    }
+
+                }
+                
+
+                return input;
+            
+            }
 
             //Checks to make sure that player input is a int and that the int is within the parameters start and end
             public int NumberRange(int value, int start, int end)
