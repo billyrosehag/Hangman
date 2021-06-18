@@ -7,16 +7,12 @@ namespace Hangman
 {
     public class myProgram
     {
-
-
-
-        static void Main(string[] args)
+ static void Main(string[] args)
         {
             TheGame myGame = new TheGame();
 
             //IntroScreen
             myGame.GameIntro();
-
             //Actual application
             myGame.Game();
         }
@@ -65,11 +61,13 @@ namespace Hangman
 
                     //Secret word is choosen from an array
                     string secretWord = arrSecretWords[RandomGenerator(0, arrSecretWords.Length)];
+                    //Array where all correct letters will be stored
                     char[] charCorrectLetters = new char[0];
 
                     //StringBuilder that stores all the wrong chars
                     StringBuilder wrongCharacters = new StringBuilder();
 
+                    //Replaces all the letters in choosen secret word with (_)
                     string shownWord = HideWord(secretWord);
 
                     // ####### The actual hangman game #######
@@ -141,15 +139,15 @@ namespace Hangman
                         Console.WriteLine($"\tCurrent word: {shownWord}");
                         Console.WriteLine("Great work. You figured out the correct word and " +
                                           "\nsaved the hanging man.");
-                        Console.Write("Want to go again (Y/N): ");
+                        
                     }
                     else
                     { //Lost
                         Console.WriteLine($"\t----GAME-OVER-----" +
                                         $"\n\nYou are out of guess. The correct word was {secretWord}.\n");
-                        Console.Write("Want to go again (Y/N): ");
+                        
                     }
-
+                    Console.Write("Want to go again (Y/N): ");
                     //The final section of the program, where the player chooses to play again or exit program.
                     isalive = ProgramEnding(Console.ReadLine().ToLower());
 

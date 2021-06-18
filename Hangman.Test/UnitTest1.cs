@@ -12,6 +12,7 @@ namespace Hangman.Test
         [Fact]
         public void HideWordWhenCalled()
         {
+            //Should replace all letters of input word with lower dashes(_)
             TheGame sut = new TheGame();
 
             string expected = "_____";
@@ -26,9 +27,8 @@ namespace Hangman.Test
         [Fact]
         public void RestartProgramWhenCalled()
         {
+            //Get to the end of while Loop and jump to the top if input is "y" or "yes"
             TheGame sut = new TheGame();
-
-            //bool expected = false;
 
             bool actual = sut.ProgramEnding("y");
 
@@ -39,6 +39,7 @@ namespace Hangman.Test
         [Fact]
         public void ReturnNumberIfCorrectInput()
         {
+            //Should parse to int if input is a number
             TheGame sut = new TheGame();
 
             int expected = 5;
@@ -49,6 +50,7 @@ namespace Hangman.Test
         [Fact]
         public void ReturnZeroIfWrongInput()
         {
+            //It should return 0 if player inputs wrong, like a letter or a word
             TheGame sut = new TheGame();
 
             int expected = 0;
@@ -61,6 +63,7 @@ namespace Hangman.Test
         [Fact]
         public void AddToWrongCharacters()
         {
+            //Adds the wrong character
             TheGame sut = new TheGame();
 
             StringBuilder actual = new StringBuilder("string");
@@ -75,6 +78,7 @@ namespace Hangman.Test
         [Fact]
         public void ShowNotAdd()
         {
+            //Show the letters inside the stringbuilder, but does not add the char
             TheGame sut = new TheGame();
 
             StringBuilder actual = new StringBuilder("string");
@@ -87,7 +91,7 @@ namespace Hangman.Test
         }
 
         [Fact]
-
+        //RandomGenerator()
         public void RandomCheck()
         {
             TheGame sut = new TheGame();
@@ -242,6 +246,7 @@ namespace Hangman.Test
 
         }
 
+        //HangmanGraphics()
         [Fact]
         public void LengthLayer1HangmanDrawing()
         {
