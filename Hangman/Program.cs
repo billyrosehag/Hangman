@@ -123,7 +123,7 @@ namespace Hangman
                         {
                             //Imports player input if it is one letter and is not already inside wrongCharacters string Builder
                             Console.WriteLine("Character not part of the secret word.");
-                            if (strInput.Length == 1)
+                            if (strInput.Length == 1 && !wrongCharacters.ToString().Contains(inputChar))
                             {
                                 wrongCharacters = MyBuilder(wrongCharacters,inputChar,false);
                                 playerGuesses--;
@@ -159,10 +159,8 @@ namespace Hangman
             {
                 char[] shownWord = new char[secretWord.Length];
 
-                for (int i = 0; i < shownWord.Length; i++)
-                {
-                    shownWord[i] = '_';
-                }
+                Array.Fill(shownWord, '_');
+                
                 string result = string.Join("", shownWord);
                 return result;
             }
