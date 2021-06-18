@@ -54,8 +54,6 @@ namespace Hangman
                         intInput = NumberRange(StringToInt(Console.ReadLine()), 1, 3);
                     } while (intInput == 0);
 
-
-
                     //String array where all secret words are stored, changes depending on what the player chooses 
                     string[] arrSecretWords = DifficultyLevel(intInput);
 
@@ -106,10 +104,14 @@ namespace Hangman
                         {
                             shownWord = secretWord;
                         }
+                        else if(strInput.Length > 1)
+                        {
+                            playerGuesses--;
+                        }
                         else
                         {
-                            //Wrong string
-                            playerGuesses--;
+                            Console.WriteLine("Input Required. Try again:");
+                      
                         }
 
                         //Checks whether the input character is found in the secret word or not
